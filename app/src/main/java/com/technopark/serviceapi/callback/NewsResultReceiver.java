@@ -27,18 +27,10 @@ class NewsResultReceiver extends ResultReceiver {
             mListener.onNewsResult(success, result);
         }
         String scheduled = (resultData.getString(NewsIntentService.SCHEDULED));
-        while (scheduled == null)
-        {
-            System.out.println("WTF?");
+        while (scheduled == null) {
             scheduled = (resultData.getString(NewsIntentService.SCHEDULED));
         }
-        if (scheduled == null)
-        {
-            System.out.println("WTF?!!!!");
-        }
-        System.out.println(ServiceHelper.getInstance().getCountListeners() + " " + scheduled);
         if (!scheduled.equals(NewsIntentService.SCHEDULED))
             ServiceHelper.getInstance().removeListener(requestId);
-        System.out.println(ServiceHelper.getInstance().getCountListeners() + " " + scheduled);
     }
 }

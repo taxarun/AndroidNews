@@ -109,14 +109,12 @@ public class CallbackActivity extends AppCompatActivity implements ServiceHelper
     public void onCheckboxClicked(View view) {
         CheckBox check = (CheckBox) this.findViewById(R.id.chbx_update);
         if (check.isChecked()) {
-            System.out.println("CHECKED");
             mIntent = ServiceHelper.getInstance().getIntent(activity, activity);
             Scheduler.getInstance().schedule(this, mIntent, 60000);
 
         }
         else {
             Scheduler.getInstance().unschedule(this, mIntent);
-            ServiceHelper.getInstance().removeScheduledListener();
         }
     }
 }

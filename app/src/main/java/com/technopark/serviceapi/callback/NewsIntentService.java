@@ -62,7 +62,6 @@ public class NewsIntentService extends IntentService {
                 receiver.send(RESULT_ERROR, data);
             }
             data.putString(SCHEDULED, text);
-            System.out.println(text + "!!!!!");
         } catch (IOException ex) {
             data.putString(EXTRA_NEWS_RESULT, ex.getMessage());
             data.putString(SCHEDULED, text);

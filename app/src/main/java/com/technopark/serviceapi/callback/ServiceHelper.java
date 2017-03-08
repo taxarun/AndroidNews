@@ -48,15 +48,12 @@ class ServiceHelper {
         receiver.setListener(listener);
         mResultReceivers.put(mScheduledListener, receiver);
 
-//        mScheduledListener = mIdCounter;
-
         Intent intent = new Intent(context, NewsIntentService.class);
         intent.setAction(NewsIntentService.ACTION_NEWS);
         intent.putExtra(NewsIntentService.EXTRA_NEWS_RESULT_RECEIVER, receiver);
         intent.putExtra(NewsIntentService.EXTRA_NEWS_TEXT, NewsIntentService.SCHEDULED);
         context.startService(intent);
 
-//        mIdCounter++;
         return intent;
     }
 
@@ -65,10 +62,6 @@ class ServiceHelper {
         if (receiver != null) {
             receiver.setListener(null);
         }
-    }
-
-    void removeScheduledListener() {
-//        removeListener(mScheduledListener);
     }
 
     interface NewsResultListener {
