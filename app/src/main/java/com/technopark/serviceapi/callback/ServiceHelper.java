@@ -8,7 +8,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 class ServiceHelper {
-    private int mIdCounter = 1;
+    private int mIdCounter = 2;
+    private int mScheduledListener = 1;
     private final Map<Integer, NewsResultReceiver> mResultReceivers = new Hashtable<>();
 
     private static ServiceHelper instance;
@@ -23,6 +24,11 @@ class ServiceHelper {
         return instance;
     }
 
+    int getCountListeners()
+    {
+        return mResultReceivers.size();
+    }
+
     int downloadNewsProcess(final Context context, final NewsResultListener listener) {
         final NewsResultReceiver receiver = new NewsResultReceiver(mIdCounter, new Handler());
         receiver.setListener(listener);
@@ -31,9 +37,27 @@ class ServiceHelper {
         Intent intent = new Intent(context, NewsIntentService.class);
         intent.setAction(NewsIntentService.ACTION_NEWS);
         intent.putExtra(NewsIntentService.EXTRA_NEWS_RESULT_RECEIVER, receiver);
+        intent.putExtra(NewsIntentService.EXTRA_NEWS_TEXT, "test");
         context.startService(intent);
 
         return mIdCounter++;
+    }
+
+    Intent getIntent(final Context context, final NewsResultListener listener) {
+        final NewsResultReceiver receiver = new NewsResultReceiver(mIdCounter, new Handler());
+        receiver.setListener(listener);
+        mResultReceivers.put(mScheduledListener, receiver);
+
+//        mScheduledListener = mIdCounter;
+
+        Intent intent = new Intent(context, NewsIntentService.class);
+        intent.setAction(NewsIntentService.ACTION_NEWS);
+        intent.putExtra(NewsIntentService.EXTRA_NEWS_RESULT_RECEIVER, receiver);
+        intent.putExtra(NewsIntentService.EXTRA_NEWS_TEXT, NewsIntentService.SCHEDULED);
+        context.startService(intent);
+
+//        mIdCounter++;
+        return intent;
     }
 
     void removeListener(final int id) {
@@ -41,6 +65,10 @@ class ServiceHelper {
         if (receiver != null) {
             receiver.setListener(null);
         }
+    }
+
+    void removeScheduledListener() {
+//        removeListener(mScheduledListener);
     }
 
     interface NewsResultListener {

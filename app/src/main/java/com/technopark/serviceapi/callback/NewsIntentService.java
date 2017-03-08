@@ -15,11 +15,14 @@ import ru.mail.weather.lib.Topics;
 
 public class NewsIntentService extends IntentService {
     public final static String ACTION_NEWS = "action.NEWS";
+    public final static String EXTRA_NEWS_TEXT = "extra.NEWS_TEXT";
     public final static String EXTRA_NEWS_RESULT_RECEIVER = "extra.EXTRA_NEWS_RESULT_RECEIVER";
 
     public final static int RESULT_SUCCESS = 1;
     public final static int RESULT_ERROR = 2;
     public final static String EXTRA_NEWS_RESULT = "extra.EXTRA_NEWS_RESULT";
+
+    public final static String SCHEDULED = "extra.SCHEDULED";
 
     public NewsIntentService() {
         super("NewsIntentService");
@@ -29,15 +32,15 @@ public class NewsIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            System.out.println(action);
             if (ACTION_NEWS.equals(action)) {
+                final String text = intent.getStringExtra(EXTRA_NEWS_TEXT);
                 final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_NEWS_RESULT_RECEIVER);
-                handleActionYoda(receiver);
+                handleActionNews(text, receiver);
             }
         }
     }
 
-    private void handleActionYoda(final ResultReceiver receiver) {
+    private void handleActionNews(final String text, final ResultReceiver receiver) {
         final Bundle data = new Bundle();
         try {
             Context cont = this.getApplicationContext();
@@ -58,8 +61,11 @@ public class NewsIntentService extends IntentService {
                 data.putString(EXTRA_NEWS_RESULT, "result is null");
                 receiver.send(RESULT_ERROR, data);
             }
+            data.putString(SCHEDULED, text);
+            System.out.println(text + "!!!!!");
         } catch (IOException ex) {
             data.putString(EXTRA_NEWS_RESULT, ex.getMessage());
+            data.putString(SCHEDULED, text);
             receiver.send(RESULT_ERROR, data);
         }
     }

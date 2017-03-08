@@ -23,6 +23,12 @@
         android:layout_height="wrap_content"
         android:text="@string/get_news" />
 
+    <CheckBox android:id="@+id/chbx_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scheduler"
+        android:onClick="onCheckboxClicked"/>
+
     <TextView
         android:id="@+id/head"
         android:layout_gravity="center_horizontal"

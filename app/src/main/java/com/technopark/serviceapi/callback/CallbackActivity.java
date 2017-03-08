@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.technopark.serviceapi.R;
@@ -15,6 +16,7 @@ import com.technopark.serviceapi.SettingsActivity;
 import java.util.Date;
 
 import ru.mail.weather.lib.News;
+import ru.mail.weather.lib.Scheduler;
 import ru.mail.weather.lib.Storage;
 
 public class CallbackActivity extends AppCompatActivity implements ServiceHelper.NewsResultListener {
@@ -24,6 +26,7 @@ public class CallbackActivity extends AppCompatActivity implements ServiceHelper
     private TextView mDate;
     private Button mButton;
     private CallbackActivity activity;
+    private Intent mIntent;
 
     private final View.OnClickListener onButtonClick = new View.OnClickListener() {
         @Override
@@ -79,6 +82,7 @@ public class CallbackActivity extends AppCompatActivity implements ServiceHelper
 
     @Override
     public void onNewsResult(final boolean success, final String result) {
+        System.out.println("worked");
         mRequestId = 0;
         Context test = this.getApplicationContext();
         Storage store = Storage.getInstance(test);
@@ -99,6 +103,20 @@ public class CallbackActivity extends AppCompatActivity implements ServiceHelper
         if (!success) {
             Snackbar.make(this.findViewById(R.id.news_content), "Can't come online", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+        }
+    }
+
+    public void onCheckboxClicked(View view) {
+        CheckBox check = (CheckBox) this.findViewById(R.id.chbx_update);
+        if (check.isChecked()) {
+            System.out.println("CHECKED");
+            mIntent = ServiceHelper.getInstance().getIntent(activity, activity);
+            Scheduler.getInstance().schedule(this, mIntent, 60000);
+
+        }
+        else {
+            Scheduler.getInstance().unschedule(this, mIntent);
+            ServiceHelper.getInstance().removeScheduledListener();
         }
     }
 }
